@@ -10,7 +10,7 @@ RUN \
   && yum -y install tar zip
 
 # JAVA
-ENV JAVA_HOME /usr/jdk1.8.0_31
+ENV JAVA_HOME /usr/jdk1.8.0_60
 ENV PATH $PATH:$JAVA_HOME/bin
 RUN curl -sL --retry 3 --insecure \
   --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
