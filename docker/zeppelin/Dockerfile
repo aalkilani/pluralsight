@@ -9,6 +9,11 @@ RUN \
   && yum remove jdk \
   && yum -y install tar zip
 
+# ZEPPELIN
+RUN mkdir -p /zeppelin \
+    && curl -SL http://apache.mirrors.lucidnetworks.net/incubator/zeppelin/0.5.0-incubating/zeppelin-0.5.0-incubating-bin-spark-1.4.0_hadoop-2.3.tgz \
+    | tar -xzC /zeppelin --strip-components=2
+
 # JAVA
 ENV JAVA_HOME /usr/jdk1.8.0_60
 ENV PATH $PATH:$JAVA_HOME/bin
@@ -19,11 +24,6 @@ RUN curl -sL --retry 3 --insecure \
     | tar x -C /usr/ \
     && ln -s $JAVA_HOME /usr/java \
     && rm -rf $JAVA_HOME/man
-
-# ZEPPELIN
-RUN mkdir -p /zeppelin \
-    && curl -SL http://apache.mirrors.lucidnetworks.net/incubator/zeppelin/0.5.0-incubating/zeppelin-0.5.0-incubating-bin-spark-1.4.0_hadoop-2.3.tgz \
-    | tar -xzC /zeppelin --strip-components=2
 
 WORKDIR /zeppelin
 ENV ZEPPELIN_HOME         /zeppelin
