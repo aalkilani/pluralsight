@@ -6,7 +6,8 @@ RUN \
   yum update -y \
   && yum clean all \
   && yum remove java \
-  && yum remove jdk
+  && yum remove jdk \
+  && yum -y install tar zip
 
 # JAVA
 ENV JAVA_HOME /usr/jdk1.8.0_31
