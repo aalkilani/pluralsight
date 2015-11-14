@@ -1,4 +1,4 @@
-FROM centos:centos6
+FROM tianon/centos:6.5
 MAINTAINER Ahmad Alkilani <https://github.com/aalkilani>
 
 # System Prep
