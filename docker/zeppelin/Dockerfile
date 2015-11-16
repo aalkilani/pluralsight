@@ -2,8 +2,8 @@ FROM tianon/centos:6.5
 MAINTAINER Ahmad Alkilani <https://github.com/aalkilani>
 
 # System Prep
+# yum update -y && \
 RUN \
-  yum update -y && \
   yum clean all && \
   yum remove java && \
   yum remove jdk && \
@@ -47,12 +47,12 @@ RUN \
 
 
 # ZEPPELIN
+# cd /home/zeppelin/incubator-zeppelin/zeppelin-web && grunt && \
 RUN \
   cd /home/zeppelin && \
   git clone https://github.com/apache/incubator-zeppelin.git && \
-  cd /home/zeppelin/incubator-zeppelin/zeppelin-web && grunt && \
   cd /home/zeppelin/incubator-zeppelin && \
-  mvn clean package -Pcassandra-spark-1.5 -Dspark.version=1.5.2 -Dhadoop.version=2.6.0 -Phadoop-2.6 -Pyarn -DskipTests && \
+  mvn clean install -Pcassandra-spark-1.5 -Dspark.version=1.5.2 -Dhadoop.version=2.6.0 -Phadoop-2.6 -Pyarn -DskipTests && \
   chown -R zeppelin /home/zeppelin
 
 # Switch to zeppelin user
