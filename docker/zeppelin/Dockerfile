@@ -3,16 +3,24 @@ MAINTAINER Ahmad Alkilani <https://github.com/aalkilani>
 
 # System Prep
 RUN \
-  yum update -y \
-  && yum clean all \
-  && yum remove java \
-  && yum remove jdk \
-  && yum -y install tar zip
+  yum update -y && \
+  yum clean all && \
+  yum remove java && \
+  yum remove jdk && \
+  yum -y install tar zip wget curl-devel expat-devel gettext-devel openssl-devel zlib-devel && \
+  yum -y gcc perl-ExtUtils-MakeMaker && \
+  yum -y remove git && \
+  mkdir -p /home/zeppelin/prerequisites && groupadd -r zeppelin && useradd -s /bin/bash -r -m -d /home/zeppelin -g zeppelin zeppelin
 
-# ZEPPELIN
-RUN mkdir -p /zeppelin \
-    && curl -SL http://apache.mirrors.lucidnetworks.net/incubator/zeppelin/0.5.0-incubating/zeppelin-0.5.0-incubating-bin-spark-1.4.0_hadoop-2.3.tgz \
-    | tar -xzC /zeppelin --strip-components=2
+# Setup Git
+ENV PATH $PATH:/home/zeppelin/prerequisites/bin
+RUN \
+  cd /home/zeppelin/prerequisites && \
+  wget https://github.com/git/git/archive/v2.4.8.tar.gz && \
+  tar xzf git-2.0.4.tar.gz && \
+  cd git-2.0.4 && \
+  make prefix=/home/zeppelin/prerequisites/git all && \
+  make prefix=/home/zeppelin/prerequisites/git install
 
 # JAVA
 ENV JAVA_HOME /usr/jdk1.8.0_60
@@ -25,12 +33,38 @@ RUN curl -sL --retry 3 --insecure \
     && ln -s $JAVA_HOME /usr/java \
     && rm -rf $JAVA_HOME/man
 
-WORKDIR /zeppelin
-ENV ZEPPELIN_HOME         /zeppelin
+# MAVEN
+ENV MAVEN_HOME /home/zeppelin/prerequisites/apache-maven-3.3.3
+ENV PATH $PATH:$MAVEN_HOME/bin
+RUN \
+  cd /home/zeppelin/prerequisites/ && \
+  wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz && \
+  tar -xf apache-maven-3.3.3-bin.tar.gz
+
+
+# ZEPPELIN
+RUN \
+  cd /home/zeppelin && \
+  git clone https://github.com/apache/incubator-zeppelin.git && \
+  cd /home/zeppelin/incubator-zeppelin && \
+  mvn clean package -Pcassandra-spark-1.5 -Dspark.version=1.5.2 -Dhadoop.version=2.6.0 -Phadoop-2.6 -Pyarn -DskipTests && \
+  chown -R zeppelin /home/zeppelin
+
+# Switch to zeppelin user
+USER zeppelin
+
+# Pass these to docker run
+#ENV HADOOP_CONF_DIR     /pluralsight/hadoop-2.6.0/etc/hadoop
+#ENV MASTER              yarn-client
+#ENV ZEPPELIN_JAVA_OPTS  "-Dhdp.version=2.3.1.0-2574"
+
+
+WORKDIR /home/zeppelin
+ENV ZEPPELIN_HOME         /home/zeppelin
 ENV ZEPPELIN_CONF_DIR     $ZEPPELIN_HOME/conf
 ENV ZEPPELIN_NOTEBOOK_DIR $ZEPPELIN_HOME/notebook
 ENV ZEPPELIN_PORT         8988
 
 EXPOSE 8988 8989
 
-CMD ["bin/zeppelin.sh", "start"]
+CMD ["bin/zeppelin-daemon.sh", "start"]
