@@ -51,7 +51,7 @@ RUN \
   git clone https://github.com/apache/incubator-zeppelin.git && \
   cd /home/zeppelin/incubator-zeppelin/zeppelin-web && npm install && \
   cd /home/zeppelin/incubator-zeppelin && \
-  mvn clean install -Pcassandra-spark-1.5 -Dspark.version=1.5.2 -Dhadoop.version=2.6.0 -Phadoop-2.6 -Pyarn -DskipTests && \
+  mvn clean install -Pcassandra-spark-1.6 -Dspark.version=1.6.0 -Dhadoop.version=2.6.0 -Phadoop-2.6 -Pyarn -DskipTests && \
   chown -R zeppelin /home/zeppelin
 
 # Switch to zeppelin user
