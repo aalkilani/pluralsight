@@ -10,7 +10,8 @@ RUN \
   yum -y groupinstall 'Development Tools' && \
   yum -y install gcc perl-ExtUtils-MakeMaker && \
   yum -y remove git && \
-  mkdir -p /home/zeppelin/prerequisites && groupadd -r zeppelin && useradd -s /bin/bash -r -m -d /home/zeppelin -g zeppelin zeppelin
+  mkdir -p /home/zeppelin/prerequisites && \
+  groupadd -r -g 29998 zeppelin && useradd -s /bin/bash -r -m -d /home/zeppelin -u 29998 -g 29998 zeppelin
 
 # Setup Git
 ENV PATH $PATH:/home/zeppelin/prerequisites/git/bin
@@ -53,6 +54,14 @@ RUN \
   cd /home/zeppelin/incubator-zeppelin && \
   mvn clean install -Pcassandra-spark-1.6 -Dspark.version=1.6.0 -Dhadoop.version=2.6.0 -Phadoop-2.6 -Pyarn -DskipTests && \
   chown -R zeppelin /home/zeppelin
+
+# CLEANUP
+RUN \
+   yum -y remove tar zip wget curl-devel expat-devel gettext-devel openssl-devel zlib-devel bzip2 sudo && \
+   yum -y remove gcc perl-ExtUtils-MakeMaker && \
+   yum clean all && \
+   rm -rf ~/.m2/repository/* && \
+   rm -rf /home/zeppelin/prerequisites	
 
 # Switch to zeppelin user
 USER zeppelin
