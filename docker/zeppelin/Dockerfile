@@ -36,8 +36,9 @@ RUN \
   npm install -g grunt-cli
 
 ENV JAVA_HOME=/usr/jdk1.8.0_60 \
-    MAVEN_HOME=/home/zeppelin/prerequisites/apache-maven-3.3.3 \
-    PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin:/home/zeppelin/prerequisites/git/bin
+    MAVEN_HOME=/home/zeppelin/prerequisites/apache-maven-3.3.3
+
+ENV PATH $PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin:/home/zeppelin/prerequisites/git/bin
 
 # ZEPPELIN
 RUN \
