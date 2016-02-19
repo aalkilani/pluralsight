@@ -14,30 +14,22 @@ RUN \
   groupadd -r -g 29998 zeppelin && useradd -s /bin/bash -r -m -d /home/zeppelin -u 29998 -g 29998 zeppelin
 
 # Setup Git
-ENV PATH $PATH:/home/zeppelin/prerequisites/git/bin
 RUN \
   cd /home/zeppelin/prerequisites && \
   wget https://github.com/git/git/archive/v2.4.8.tar.gz && \
   tar xzf v2.4.8.tar.gz && \
   cd git-2.4.8 && \
   make prefix=/home/zeppelin/prerequisites/git all && \
-  make prefix=/home/zeppelin/prerequisites/git install
-
+  make prefix=/home/zeppelin/prerequisites/git install && \
 # JAVA
-ENV JAVA_HOME /usr/jdk1.8.0_60
-ENV PATH $PATH:$JAVA_HOME/bin
-RUN curl -sL --retry 3 --insecure \
+  curl -sL --retry 3 --insecure \
   --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
     "http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.tar.gz" \
     | gunzip \
     | tar x -C /usr/ \
     && ln -s $JAVA_HOME /usr/java \
-    && rm -rf $JAVA_HOME/man
-
+    && rm -rf $JAVA_HOME/man && \
 # MAVEN and NPM
-ENV MAVEN_HOME /home/zeppelin/prerequisites/apache-maven-3.3.3
-ENV PATH $PATH:$MAVEN_HOME/bin
-RUN \
   cd /home/zeppelin/prerequisites/ && \
   wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz && \
   tar -xf apache-maven-3.3.3-bin.tar.gz && \
@@ -45,6 +37,9 @@ RUN \
   yum -y install nodejs && \
   npm install -g grunt-cli
 
+ENV JAVA_HOME=/usr/jdk1.8.0_60
+    MAVEN_HOME=/home/zeppelin/prerequisites/apache-maven-3.3.3
+    PATH=$PATH:$JAVA_HOME/bin:$MAVEN_HOME/bin:/home/zeppelin/prerequisites/git/bin
 
 # ZEPPELIN
 RUN \
@@ -53,10 +48,8 @@ RUN \
   cd /home/zeppelin/incubator-zeppelin/zeppelin-web && npm install && \
   cd /home/zeppelin/incubator-zeppelin && \
   mvn clean install -Pcassandra-spark-1.6 -Dspark.version=1.6.0 -Dhadoop.version=2.6.0 -Phadoop-2.6 -Pyarn -DskipTests && \
-  chown -R zeppelin /home/zeppelin
-
+  chown -R zeppelin /home/zeppelin && \
 # CLEANUP
-RUN \
    yum -y remove tar zip wget curl-devel expat-devel gettext-devel openssl-devel zlib-devel bzip2 sudo && \
    yum -y remove gcc perl-ExtUtils-MakeMaker && \
    yum clean all && \
@@ -73,10 +66,10 @@ USER zeppelin
 
 
 WORKDIR /home/zeppelin/incubator-zeppelin
-ENV ZEPPELIN_HOME         /home/zeppelin/incubator-zeppelin
-ENV ZEPPELIN_CONF_DIR     $ZEPPELIN_HOME/conf
-ENV ZEPPELIN_NOTEBOOK_DIR $ZEPPELIN_HOME/notebook
-ENV ZEPPELIN_PORT         8988
+ENV ZEPPELIN_HOME=/home/zeppelin/incubator-zeppelin
+    ZEPPELIN_CONF_DIR=$ZEPPELIN_HOME/conf
+    ZEPPELIN_NOTEBOOK_DIR=$ZEPPELIN_HOME/notebook
+    ZEPPELIN_PORT=8988
 
 EXPOSE 8988 8989
 
