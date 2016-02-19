@@ -26,9 +26,7 @@ RUN \
   --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
     "http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jdk-8u60-linux-x64.tar.gz" \
     | gunzip \
-    | tar x -C /usr/ \
-    && ln -s $JAVA_HOME /usr/java \
-    && rm -rf $JAVA_HOME/man && \
+    | tar x -C /usr/ && \
 # MAVEN and NPM
   cd /home/zeppelin/prerequisites/ && \
   wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz && \
@@ -43,6 +41,8 @@ ENV JAVA_HOME=/usr/jdk1.8.0_60 \
 
 # ZEPPELIN
 RUN \
+  ln -s $JAVA_HOME /usr/java && \
+  rm -rf $JAVA_HOME/man && \
   cd /home/zeppelin && \
   git clone https://github.com/apache/incubator-zeppelin.git && \
   cd /home/zeppelin/incubator-zeppelin/zeppelin-web && npm install && \
