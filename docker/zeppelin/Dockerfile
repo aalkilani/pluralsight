@@ -7,8 +7,8 @@ RUN \
   yum remove java && \
   yum remove jdk && \
   yum -y install tar zip wget curl-devel expat-devel gettext-devel openssl-devel zlib-devel bzip2 sudo && \
-#  yum -y groupinstall 'Development Tools' && \
-#  yum -y install gcc perl-ExtUtils-MakeMaker && \
+  yum -y groupinstall 'Development Tools' && \
+  yum -y install gcc perl-ExtUtils-MakeMaker && \
   yum -y install git && \
   mkdir -p /home/zeppelin/prerequisites && \
   groupadd -r -g 29998 zeppelin && useradd -s /bin/bash -r -m -d /home/zeppelin -u 29998 -g 29998 zeppelin
@@ -27,7 +27,7 @@ RUN \
   wget ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.3.3/binaries/apache-maven-3.3.3-bin.tar.gz && \
   tar -xf apache-maven-3.3.3-bin.tar.gz && \
   curl --silent --location https://rpm.nodesource.com/setup | bash - && \
-  yum install -y npm && \
+#  yum install -y npm && \
   yum -y install nodejs && \
   npm -g install npm@latest && \
   npm install -g grunt-cli
