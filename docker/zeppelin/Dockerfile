@@ -65,8 +65,8 @@ USER zeppelin
 
 WORKDIR /home/zeppelin/incubator-zeppelin
 ENV ZEPPELIN_HOME=/home/zeppelin/incubator-zeppelin \
-    ZEPPELIN_CONF_DIR=$ZEPPELIN_HOME/conf \
-    ZEPPELIN_NOTEBOOK_DIR=$ZEPPELIN_HOME/notebook \
+    ZEPPELIN_CONF_DIR=$ZEPPELIN_HOME/home/zeppelin/incubator-zeppelin/conf \
+    ZEPPELIN_NOTEBOOK_DIR=$ZEPPELIN_HOME/home/zeppelin/incubator-zeppelin/notebook \
     ZEPPELIN_PORT=8988
 
 EXPOSE 8988 8989
