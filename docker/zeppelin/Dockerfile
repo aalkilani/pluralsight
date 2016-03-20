@@ -7,10 +7,9 @@ RUN \
   yum remove java && \
   yum remove jdk && \
   yum -y install tar zip wget curl-devel expat-devel gettext-devel openssl-devel zlib-devel bzip2 sudo && \
-  yum -y groupinstall 'Development Tools' && \
-  yum -y install gcc perl-ExtUtils-MakeMaker && \
+#  yum -y groupinstall 'Development Tools' && \
+#  yum -y install gcc perl-ExtUtils-MakeMaker && \
   yum -y install git && \
-  yum install -y libfontconfig && \
   mkdir -p /home/zeppelin/prerequisites && \
   groupadd -r -g 29998 zeppelin && useradd -s /bin/bash -r -m -d /home/zeppelin -u 29998 -g 29998 zeppelin
 
