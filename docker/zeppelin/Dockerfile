@@ -8,9 +8,6 @@ RUN \
   wget https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -O jq && \
   chmod +x ./jq && \
   cp jq /usr/bin && \
-#  wget http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm && \
-#  rpm -ivh epel-release-6-8.noarch.rpm && \
-#  yum -y --enablerepo=epel install jq && \
   mkdir -p /opt/zeppelin
 
 # Setup
